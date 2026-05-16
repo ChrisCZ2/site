@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import HomeFootSections from '../components/HomeFootSections.astro';
 import HomeTerminal from '../components/HomeTerminal.astro';
 import { site } from '../config/site';
 const avatar =
@@ -38,4 +39,6 @@ const avatar =
     <p class="who-text">{site.about.split('\n\n')[0]}</p>
     <img class="who-img" src={avatar} alt={`${site.handle} — appsec researcher`} loading="lazy" />
   </section>
+
+  <HomeFootSections />
 </BaseLayout>
