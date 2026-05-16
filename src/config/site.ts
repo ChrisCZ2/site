@@ -14,10 +14,10 @@ export const site = {
   },
   links: {
     github: 'https://github.com',
-    linkedin: 'https://www.linkedin.com',
-    hackerone: 'https://hackerone.com',
+    linkedin: 'https://www.linkedin.com/in/taz-dunn-39920a123/',
+    hackerone: 'https://hackerone.com/chriscz?type=user',
     bugcrowd: 'https://bugcrowd.com',
-    twitter: 'https://x.com',
+    twitter: 'https://x.com/ChrisCz_',
   },
   skills: [
     'Web app pentesting',
