@@ -1,0 +1,37 @@
+---
+import { site } from '../config/site';
+import { footerColumns } from '../config/navigation';
+const year = new Date().getFullYear();
+const mark = site.handle.slice(0, 2).toUpperCase();
+---
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <div>
+      <a href="/" class="brand" style="margin-bottom: 12px">
+        <span class="brand-mark">{mark}</span>
+        <span class="brand-name">{site.handle}</span>
+      </a>
+      <p class="brand-blurb">{site.description}</p>
+    </div>
+
+    {
+      footerColumns.map((col) => (
+        <div>
+          <h5>{col.title}</h5>
+          {col.links.map((link) => (
+            <a
+              href={link.href}
+              target={link.external ? '_blank' : undefined}
+              rel={link.external ? 'noopener noreferrer' : undefined}
+            >
+              {link.label}
+            </a>
+          ))}
+        </div>
+      ))
+    }
+  </div>
+
+  <p class="footer-copy">© {year} {site.handle} — responsible disclosure only</p>
+</footer>

@@ -1,0 +1,27 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import { tools } from '../config/site';
+---
+
+<PageLayout
+  title="Toolchain"
+  description="Scripts and utilities built for repeatable recon and validation workflows."
+  crumb="$ which chriscz-tools"
+>
+  <div>
+    {
+      tools.map((tool) => (
+        <article class="card">
+          <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; margin-bottom: 10px">
+            <h2 style="font-family: var(--font-ui); font-size: 20px; margin: 0; color: #fff">{tool.name}</h2>
+            <span class="tag" style="color: var(--warn); border-color: var(--warn)">{tool.lang}</span>
+          </div>
+          <p style="color: var(--muted); margin: 0 0 14px">{tool.description}</p>
+          <a href={tool.href} class="btn-skew" style="display: inline-flex">
+            <span>{tool.href === '#' ? 'link pending' : 'view repo →'}</span>
+          </a>
+        </article>
+      ))
+    }
+  </div>
+</PageLayout>

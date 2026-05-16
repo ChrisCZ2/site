@@ -1,0 +1,28 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import SeverityBadge from '../components/SeverityBadge.astro';
+import { hallOfFame } from '../config/site';
+---
+
+<PageLayout
+  title="Hall of Fame"
+  description="Selected acknowledgments. Program names published only with permission."
+  crumb="$ cat hall_of_fame.json"
+>
+  <div class="products" style="grid-template-columns: repeat(2, 1fr)">
+    {
+      hallOfFame.map((item) => (
+        <article class="product" style="cursor: default">
+          <div class="meta">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px">
+              <SeverityBadge severity={item.severity} />
+              <span style="font-family: var(--font-ui); font-size: 12px; color: var(--dim)">{item.year}</span>
+            </div>
+            <div class="name">{item.title}</div>
+            <div class="sub">{item.program}</div>
+          </div>
+        </article>
+      ))
+    }
+  </div>
+</PageLayout>

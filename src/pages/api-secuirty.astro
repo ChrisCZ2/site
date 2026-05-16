@@ -1,0 +1,20 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import TopicArchive from '../components/TopicArchive.astro';
+import { topicBySlug } from '../config/topics';
+import { getCollection } from 'astro:content';
+
+const topic = topicBySlug['api-secuirty'];
+const writeups = (await getCollection('writeups'))
+  .filter((w) => !w.data.draft && w.data.category === topic.category)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<PageLayout title={topic.title} description={topic.description} crumb="$ ls ./api-secuirty/">
+  <p class="topic-intro">
+    API pentesting involves testing an application's APIs to find security gaps that could lead to
+    data breaches or unauthorized access. APIs often handle sensitive information and need security
+    precautions when deployed in live products.
+  </p>
+  <TopicArchive topic={topic} writeups={writeups} />
+</PageLayout>

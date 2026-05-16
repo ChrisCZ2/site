@@ -1,0 +1,53 @@
+---
+title: 'SSRF'
+description: 'SSRF After getting access to the environment and finding a cloud container doing a basic enumeration, I discovered it is vulnerable to SSRF. Notice in image 1-1 a directory named metadata-db possibly has sensitive inform'
+pubDate: 2024-10-27
+severity: high
+category: 'cloud-security'
+coverImage: '/media/blog/chriscz/2024/10/2024-10-27_09-49.png'
+tags: ['cloud_security']
+draft: false
+---
+
+## SSRF
+
+After getting access to the environment and finding a cloud container doing a basic enumeration, I discovered it is vulnerable to SSRF. Notice in image 1-1 a directory named metadata-db possibly has sensitive information stored there.
+
+![screenshot](/media/blog/ssrf/01-AD_4nXffCVRREqSWHgAGoNOUvQOyyiwm_mMAWMHdURvfq_Sz97yQYhB7PMaGBl4nwF76ipDpRtuxhWENwCj5Q_q4Q6ENHUBn4Ohy-tFzbtIg9g9lwl1NpQw4pPUiDnRjCndGgBvqPXOc7oO2kZXZhxIBT0-Cswij.png)
+
+Figure 1-1
+
+In figure 1-2 there’s a directory named latest which could mean a version of the container or something involving metadata update.
+
+![screenshot](/media/blog/ssrf/02-AD_4nXdNt0eap8lHWTUFRHxPwhrDlyDJajA7NDtoGIXC1PvURIf0gcLbU11Yj7PHWYONqWZHco7G2bX8LhGMxchheWIoqdWDn33hDT92BMaXx2lLEh-f8WLpMWAjnG6zfrOvH4umQiJVqS62d-A7flcGtevYRzk.png)
+
+Figure 1-2
+
+The highlighted text in figure 1-3 shows a directory named secrets which could contain secret keys for the container and gain full control of the container.
+
+![screenshot](/media/blog/ssrf/03-AD_4nXfkAtcM2-KuVH8j0PW58-XNM3gSEsVLj8RwRmyISUBXpRQZEhXxQ46yfuMYjUcPaennG8HrPNNNjtmbB9ZsDO3RB_dNBDAeKiIYJO07Z1WfQYIHXXwF25SHJRRElH7eaCu3Xh9hoYG3z0mMA_wbiNh6fFY.png)
+
+Figure 1-3
+
+![screenshot](/media/blog/ssrf/04-AD_4nXf1CCXXIoREfbQWMJ8Cb6eFpPlOA8MIIa57Vu1Jj2KfcFxB5VBoVic1iJjaLcoLACFXIgL5JcbzKvp7ulP2awnNVZwFTyQJjlHUJITCGgDCPIUBl9iYR2adsh5ranNQsEnZ2XCIvg6Sfo154S4SjPMYp3Yo.png)
+
+Figure 1-4
+
+After i get entered in the kubernetes -goat file which i found in shown in figure 1-4. we get the hash of the container which is shown in figure 1-5
+
+![screenshot](/media/blog/ssrf/05-AD_4nXeGcp1PUjIwaNGl3TFfiaDGHyNaG9_1VrliSid0m1XQKU-uZFowp5Z47HI4J0uSyPNYnjqtt6niKSbzd4iYjvn6KCCbDERGpNhT7yWkMppRFVJY1kYdpL3lLbvZOM6OGFmQSHYOKIiI0KHJcxYWlAtNbYZo.png)
+
+Figure 1-5
+
+We can also echo the hash found in kubernetes goat file and decrypt to be readable.
+
+Save for further exploitation if we so choose.
+
+![screenshot](/media/blog/ssrf/06-AD_4nXffyKV4Puvsv-BV9IVS7jPtoHn1_TIG_D-kKucPl3aJ0VWbLzzBpwRW1ITq1PfB-bvKecVqkzFNSI6MR--lar4mUUO7f4OxXIPpNN7W46mSX80duFPoSBNalzBl8bbIc5_cRxdJCLIXWBTuMUrZ0SRY5y3u.png)
+
+Figure 1-6
+
+## How to prevent SSRF in the cloud 
+
+OWASP has a great resource and suggestions to prevent hackers to get data or full control of your cloud environments.
+https://owasp.org/Top10/A10_2021-Server-Side_Request_Forgery_(SSRF)/

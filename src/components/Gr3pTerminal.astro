@@ -1,0 +1,20 @@
+---
+import { site } from '../config/site';
+---
+
+<div class="home-terminal-prompt">
+  <span class="user">root@{site.handle}</span>:~# <span class="cm">./exploit.sh</span>
+</div>
+<div class="home-terminal-wrap">
+  <pre class="home-terminal" aria-label="Example exploit script"><code><span class="ln">1</span> <span class="kw">import</span> <span class="id">Target</span> <span class="kw">from</span> <span class="str">'reality'</span>
+<span class="ln">2</span> <span class="kw">const</span> <span class="id">hunter</span> = <span class="kw">new</span> <span class="fn">BugHunter</span>({'{'}
+<span class="ln">3</span>   <span class="id">handle</span>: <span class="str">'{site.handle}'</span>,
+<span class="ln">4</span>   <span class="id">skill</span>: <span class="str">'appsec'</span>,
+<span class="ln">5</span>   <span class="id">writeups</span>: <span class="num">{site.stats.reports}</span>,
+<span class="ln">6</span>   <span class="id">disclosure</span>: <span class="str">'responsible'</span>
+<span class="ln">7</span> {'}'});
+<span class="ln">8</span>
+<span class="ln">9</span> <span class="cm">// SQLi · IDOR · BOLA · SSRF · XSS</span>
+<span class="ln">10</span> <span class="kw">await</span> <span class="id">hunter</span>.<span class="fn">pwn</span>([<span class="str">'...in-scope'</span>]);
+<span class="ln">11</span> <span class="id">console</span>.<span class="fn">log</span>(<span class="str">"Writeups live on chriscz.com"</span>);</code></pre>
+</div>

@@ -1,0 +1,46 @@
+---
+title: 'IDOR'
+description: 'Intial Access after getting access to site page noticed are my account details but in the url there id of my of 1009 which sticks out to that are possibly more accounts on this site. Knowing this is tied to our this valu'
+pubDate: 2025-07-12
+severity: high
+category: 'web-app-security'
+coverImage: '/media/blog/chriscz/2025/07/image.png'
+tags: ['web_app_security']
+draft: false
+---
+
+## Intial Access
+
+after getting access to site page noticed are my account details but in the url there id of my of 1009 which sticks out to that are possibly more accounts on this site.
+
+![screenshot](/media/blog/chriscz/2024/12/image.png)
+
+Knowing this is tied to our this value after the account parameter we can send this intruder and create or import a list of numbers to automate to find valid accounts on the site.
+
+Intercepting the current page requests
+
+![screenshot](/media/blog/chriscz/2024/12/image-1.png)
+
+## send to intruder or automation tool
+
+highlight the number 1009 or whatever value to automate with intruder 
+
+![screenshot](/media/blog/chriscz/2024/12/image-3.png)
+
+## Create a list on use case
+
+![screenshot](/media/blog/chriscz/2024/12/image-4.png)
+
+## Found admin users after wordlist testing
+
+after the test was done found 200 code results and found two other accounts and were admin and see all their info about each account. this can be esclated further to either login as them are social engineering.
+
+![screenshot](/media/blog/chriscz/2024/12/image-5.png)
+
+![screenshot](/media/blog/chriscz/2024/12/image-6.png)
+
+## Remediation
+
+Use Complex Identifiers: Employ globally unique identifiers (GUIDs) or random identifiers
+
+Instead of using direct references (like IDs) in URLs or parameters, use indirect methods such as reference maps or hashing

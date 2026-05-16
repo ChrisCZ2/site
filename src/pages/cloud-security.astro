@@ -1,0 +1,18 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import TopicArchive from '../components/TopicArchive.astro';
+import { topicBySlug } from '../config/topics';
+import { getCollection } from 'astro:content';
+
+const topic = topicBySlug['cloud-security'];
+const writeups = (await getCollection('writeups'))
+  .filter((w) => !w.data.draft && w.data.category === topic.category)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<PageLayout title={topic.title} description={topic.description} crumb="$ ls ./cloud-security/">
+  <p class="topic-intro">
+    Cloud and container security research — SSRF, metadata services, and misconfigured cloud assets.
+  </p>
+  <TopicArchive topic={topic} writeups={writeups} />
+</PageLayout>

@@ -1,0 +1,51 @@
+---
+import SeverityBadge from './SeverityBadge.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  href: string;
+  pubDate: Date;
+  severity: 'critical' | 'high' | 'medium' | 'low' | 'info';
+  program?: string;
+  tags: string[];
+  coverImage?: string;
+}
+
+const { title, description, href, pubDate, severity, program, tags, coverImage } = Astro.props;
+const formatted = pubDate.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+});
+---
+
+<article class="card writeup-card">
+  <a href={href} class="writeup-card-link">
+    {
+      coverImage && (
+        <div class="writeup-card-thumb">
+          <img src={coverImage} alt="" loading="lazy" />
+        </div>
+      )
+    }
+    <div class="writeup-card-body">
+      <div class="writeup-card-meta">
+        <SeverityBadge severity={severity} />
+        {program && <span class="writeup-card-program">{program}</span>}
+        <time datetime={pubDate.toISOString()} class="writeup-card-date">{formatted}</time>
+      </div>
+      <h2 class="writeup-card-title">{title}</h2>
+      <p class="writeup-card-desc">{description}</p>
+      {
+        tags.length > 0 && (
+          <div class="writeup-card-tags">
+            {tags.map((tag) => (
+              <span class="skill-chip">#{tag}</span>
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </a>
+</article>

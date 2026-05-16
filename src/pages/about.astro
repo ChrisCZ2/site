@@ -1,0 +1,63 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import { site } from '../config/site';
+const linkEntries = [
+  { label: 'GitHub', href: site.links.github },
+  { label: 'LinkedIn', href: site.links.linkedin },
+  { label: 'HackerOne', href: site.links.hackerone },
+  { label: 'X / Twitter', href: site.links.twitter },
+];
+---
+
+<PageLayout title="About Chriscz" crumb="$ cat about.txt">
+  <article class="card prose-writeup">
+    <img
+      src="https://chriscz.com/wp-content/uploads/2024/10/cropped-wolverine.jpg"
+      alt="Chriscz"
+      class="about-avatar"
+      loading="lazy"
+    />
+
+    {
+      site.about.split('\n\n').map((para) => (
+        <p>{para}</p>
+      ))
+    }
+
+    <h2>Topics</h2>
+    <ul>
+      <li><a href="/web-app-security">Web App Pentesting</a></li>
+      <li><a href="/api-secuirty">API Security</a></li>
+      <li><a href="/cloud-security">Cloud Pentesting</a></li>
+      <li><a href="/ctfs">CTFs</a></li>
+      <li><a href="/blog">All writeups (Blog)</a></li>
+    </ul>
+
+    <h2>Contact</h2>
+    <ul>
+      <li>
+        Email: <a href={`mailto:${site.email}`}>{site.email}</a>
+      </li>
+      <li>
+        PGP fingerprint: <code>{site.pgpFingerprint}</code>
+      </li>
+    </ul>
+
+    <h2>Links</h2>
+    <ul>
+      {
+        linkEntries.map(({ label, href }) => (
+          <li>
+            <a href={href} target="_blank" rel="noopener noreferrer">
+              {label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <p style="margin-top: 2rem">
+      <a href="/blog" class="btn-primary">Read writeups →</a>
+    </p>
+  </article>
+</PageLayout>

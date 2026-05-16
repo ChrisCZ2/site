@@ -1,0 +1,72 @@
+---
+title: 'SQL injection UNION attack, retrieving multi values'
+description: 'Initial Access Getting access to the app lets navigate to any area in the top menu to see products.L injection UNION attack, retrieving multiple values in a single column Area of interest the highlighted part of the url '
+pubDate: 2025-07-12
+severity: high
+category: 'web-app-security'
+coverImage: '/media/blog/chriscz/2025/07/what_is_mysql_.webp'
+tags: ['web_app_security']
+draft: false
+---
+
+## Initial Access
+
+Getting access to the app lets navigate to any area in the top menu to see products.L injection UNION attack, retrieving multiple values in a single column
+
+![screenshot](/media/blog/chriscz/2024/12/image-7.png)
+
+Area of interest 
+
+the highlighted part of the url is our injection point to test if we can extract information from the servers database and to get a users creds.
+
+![screenshot](/media/blog/chriscz/2024/12/image-8.png)
+
+## Transition to burp suite or Caido
+
+![screenshot](/media/blog/chriscz/2024/12/image-9.png)
+
+## Testing 
+
+use the search feature to test the site can help if injection works and leaks data. using content is great way to tell if a sql query statement works or not. the content will vary if theres an error or valid information is add to the response.
+
+![screenshot](/media/blog/chriscz/2024/12/image-10.png)
+
+After testing various payload using null values we get a new valid response from the application. a payload used to test this can be found below. 
+
+![screenshot](/media/blog/chriscz/2024/12/image-11.png)
+
+```
+'+UNION+SELECT+NULL,'abc'--
+```
+
+Valid payload 
+
+Now that this type of payload works and can print out values to the screen via our statement we can alter it to pull informaton from the database tables.
+
+![screenshot](/media/blog/chriscz/2024/12/image-12.png)
+
+After researching found a payload we explained can work to pull usernames and passwords from the sql table. below is the payload we used and in the image it works and get a 200 okay response. lets see it the usernames and passwords are there.
+
+```
+'+UNION+SELECT+NULL,username||'~'||password+FROM+users--
+```
+
+![screenshot](/media/blog/chriscz/2024/12/image-13.png)
+
+shows the passwords of the users
+
+![screenshot](/media/blog/chriscz/2024/12/image-16.png)
+
+Now that we have valid creds we can login in as either user but most priviledged will be the admin account over the other two accounts. we logged in and solved this challenge.
+
+![screenshot](/media/blog/chriscz/2024/12/image-15.png)
+
+Overview of the Blog
+
+Input Field: Target fields that are included in SQL queries (URL parameters, forms).Vulnerability: Inject `UNION SELECT` to test SQL injection.
+
+Column Count: Use NULLs to determine the number of columns.
+
+Concatenation: Use `CONCAT()`, `||`, or `+` to merge multiple values into one column.
+
+Target Table: Extract sensitive data like usernames, emails, or passwords.

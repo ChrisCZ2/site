@@ -1,0 +1,39 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('fitness'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<PageLayout
+  title="Fitness / Life"
+  description="Gym, training, and life outside the terminal — balance with appsec."
+  crumb="$ ls ./fitness/"
+>
+  <div class="topic-list">
+    {
+      posts.map((entry) => (
+        <a href={`/fitness/${entry.id}`} class="card writeup-card" style="display: block; padding: 0">
+          <div class="writeup-card-body" style="padding: 20px 24px">
+            <time
+              datetime={entry.data.pubDate.toISOString()}
+              style="font-family: var(--font-mono); font-size: 12px; color: var(--steel)"
+            >
+              {entry.data.pubDate.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+              })}
+            </time>
+            <h2 style="font-size: 1.1rem; font-weight: 800; text-transform: uppercase; margin: 8px 0">
+              {entry.data.title}
+            </h2>
+            <p style="color: var(--muted); margin: 0; line-height: 1.6">{entry.data.description}</p>
+          </div>
+        </a>
+      ))
+    }
+  </div>
+</PageLayout>

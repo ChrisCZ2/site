@@ -1,0 +1,18 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import TopicArchive from '../components/TopicArchive.astro';
+import { topicBySlug } from '../config/topics';
+import { getCollection } from 'astro:content';
+
+const topic = topicBySlug['web-app-security'];
+const writeups = (await getCollection('writeups'))
+  .filter((w) => !w.data.draft && w.data.category === topic.category)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<PageLayout title={topic.title} description={topic.description} crumb="$ ls ./web-app-security/">
+  <p class="topic-intro">
+    Web application security writeups — injection, access control, XSS, and insecure uploads.
+  </p>
+  <TopicArchive topic={topic} writeups={writeups} />
+</PageLayout>

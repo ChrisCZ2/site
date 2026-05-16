@@ -1,0 +1,43 @@
+---
+import WriteupCard from './WriteupCard.astro';
+import type { Topic } from '../config/topics';
+
+interface Props {
+  topic: Topic;
+  writeups: Array<{
+    id: string;
+    data: {
+      title: string;
+      description: string;
+      pubDate: Date;
+      severity: 'critical' | 'high' | 'medium' | 'low' | 'info';
+      program?: string;
+      tags: string[];
+      coverImage?: string;
+    };
+  }>;
+}
+
+const { topic, writeups } = Astro.props;
+---
+
+{
+  writeups.length === 0 ? (
+    <p class="topic-empty">No writeups in this category yet.</p>
+  ) : (
+    <div class="topic-list">
+      {writeups.map((entry) => (
+        <WriteupCard
+          title={entry.data.title}
+          description={entry.data.description}
+          href={`/writeups/${entry.id}`}
+          pubDate={entry.data.pubDate}
+          severity={entry.data.severity}
+          program={entry.data.program}
+          tags={entry.data.tags}
+          coverImage={entry.data.coverImage}
+        />
+      ))}
+    </div>
+  )
+}

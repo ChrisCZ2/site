@@ -1,0 +1,32 @@
+---
+title: 'XXS Stored'
+description: 'XXS Stored Cross site is dangerous especially stored because its stored into the site and database and can’t be easily terminated from infecting the server hosting the site/sites. After researching how i can exploit this'
+pubDate: 2024-10-24
+severity: medium
+category: 'web-app-security'
+coverImage: '/media/blog/chriscz/2024/10/2024-10-27_09-59.png'
+tags: ['web_app_security']
+draft: false
+---
+
+## XXS Stored
+
+Cross site is dangerous especially stored because its stored into the site and database and can’t be easily terminated from infecting the server hosting the site/sites.
+
+After researching how i can exploit this text field with cross site scripting I start with this basic command to print something to see if get a idea how secure this area of the site has.
+
+![screenshot](/media/blog/chriscz/2024/10/image.png)
+
+Now that I know the site allows for the basic alert script to be processed through the site, let’s see if I can generate a payload to exploit the low character block filter.
+
+I found a very interesting payload to exploit the weakness at the first message field that was too small for it to work but after editing the contents field by using the inspection tool from the browser was able to load the full payload into the message block. This will allow us to upload any file if the engineers and developers didn’t properly secure the code.
+
+![screenshot](/media/blog/chriscz/2024/10/image-1.png)
+
+## Resources for xxs payload ideas and Remdiation
+
+A really good resource for possible payloads for XXS can be found here: https://portswigger.net/web-security/cross-site-scripting/cheat-sheet
+
+Remediations to possible to patch XXS :
+
+input validation, parameterized queries, and regularly updating and patching database management systems.

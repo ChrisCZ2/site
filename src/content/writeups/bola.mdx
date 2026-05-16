@@ -1,0 +1,30 @@
+---
+title: 'BOLA'
+description: 'BOLA vulnerability occurs when an application or API fails to properly verify if a user is authorized to access specific data objects.. This can allow users to bypass authorization checks and access sensitive data or per'
+pubDate: 2024-11-13
+severity: high
+category: 'api-secuirty'
+coverImage: '/media/blog/chriscz/2024/11/create-a-featured-image-for-a-blog-post-about-the.png'
+tags: ['api_secuirty']
+draft: false
+---
+
+BOLA vulnerability occurs when an application or API fails to properly verify if a user is authorized to access specific data objects.. This can allow users to bypass authorization checks and access sensitive data or perform unauthorized tasks.
+
+this area of the url is vulnerable to BOLA but lets see what is running on the backend to process
+
+this info to the frontend side of the site.
+
+![screenshot](/media/blog/bola/01-Pasted-image-20240907153040.png)
+
+this area of the url is vulnerable to BOLA and then intercepting the response shows info about alot of information including an id number and full username and email.
+
+![screenshot](/media/blog/bola/02-image.png)
+
+look for areas say a forums post section or community board can leak info when viewing it in burp or caido. later we can input this into a repeater request by changing the id of the current url. shown in the image below after changing the end of the url it leaks multiple users which can be used to take full control of the infrastructure if an admin was compromised as well.
+
+![screenshot](/media/blog/bola/03-Pasted-image-20240907153430.png)
+
+## Recommendations to prevent BOLA
+
+A good article to read how to prevent BOLA for your APIs : https://owasp.org/API-Security/editions/2023/en/0xa1-broken-object-level-authorization/

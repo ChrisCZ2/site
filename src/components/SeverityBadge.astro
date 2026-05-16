@@ -1,0 +1,11 @@
+---
+type Severity = 'critical' | 'high' | 'medium' | 'low' | 'info';
+
+interface Props {
+  severity: Severity;
+}
+
+const { severity } = Astro.props;
+---
+
+<span class={`tag ${severity}`}>{severity}</span>

@@ -1,0 +1,18 @@
+---
+import { siteSections } from '../config/sections';
+---
+
+<section class="home-foot-sections" aria-label="Site sections">
+  <div class="home-foot-sections-grid">
+    {
+      siteSections.map((section) => (
+        <a href={section.href} class="home-foot-section-card">
+          <img class="home-foot-section-gif" src={section.gif} alt="" loading="lazy" />
+          <h3>{section.title}</h3>
+          <p>{section.description}</p>
+          <span class="home-foot-section-link">Open section →</span>
+        </a>
+      ))
+    }
+  </div>
+</section>

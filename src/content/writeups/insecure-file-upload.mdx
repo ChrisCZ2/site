@@ -1,0 +1,38 @@
+---
+title: 'Insecure File Upload'
+description: 'Insure File Upload Insecure file upload is a vulnerability where an application allows the upload of files without proper validation and control. Now there is so many websites and apps use a file upload feature is a stan'
+pubDate: 2024-10-29
+severity: medium
+category: 'web-app-security'
+coverImage: '/media/blog/chriscz/2024/10/2024-10-27_10-05.png'
+tags: ['web_app_security']
+draft: false
+---
+
+Insure File Upload
+
+Insecure file upload is a vulnerability where an application allows the upload of files without proper validation and control. Now there is so many websites and apps use a file upload feature is a standard can be security issue if gone without proper protections in place. In this short write up will demonstrate how to exploit this feature and how give possible recommendations to protect against this vulnerability.
+
+![screenshot](/media/blog/chriscz/2024/10/image-2.png)
+
+After testing to see if I can upload a web shell to gain code execution the web app only allows jpeg and Png images.
+
+## Utilizing Burp Suite
+
+After using burp suite to intercept the post request after uploading a webshell I can see all the information. Let’s see what I can change to allow the web app to accept the file. After researching ways to allow a file to upload I was to change the content-type in this case.which doesn’t change the code that is written but tricks the web app code because it thinks its an image from content but not reading the file contents.
+
+![screenshot](/media/blog/chriscz/2024/10/image-3.png)
+
+![screenshot](/media/blog/chriscz/2024/10/image-4.png)
+
+After I tried again it allowed a successful file upload and can gain code execution and upgrade to webshell to a full reverse shell.
+
+![screenshot](/media/blog/chriscz/2024/10/image-5.png)
+
+## Remediations for preventing File upload Vulnerability
+
+Allow only certain file extensions: Restrict uploads to file types that are necessary for your application’s functionality.
+
+Set maximum file size and name length: This helps prevent denial-of-service (DoS) attacks caused by the upload of excessively large files.
+
+Allow only authorized users: Ensure that only authenticated and authorized users can upload files

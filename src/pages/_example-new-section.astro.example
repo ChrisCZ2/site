@@ -1,0 +1,17 @@
+---
+/**
+ * EXAMPLE — copy to src/pages/programs.astro (remove .example) then add a link in
+ * src/config/navigation.ts under mainNav.
+ */
+import PageLayout from '../layouts/PageLayout.astro';
+---
+
+<PageLayout
+  title="Programs"
+  description="Bug bounty programs I actively hunt on."
+  crumb="$ cat programs.txt"
+>
+  <article class="card prose-writeup">
+    <p>Your new section content goes here.</p>
+  </article>
+</PageLayout>

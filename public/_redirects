@@ -1,0 +1,9 @@
+# Legacy chriscz.com WordPress URLs → new routes
+/2025/07/12/sql-injection-union-attack-retrieving-multi-values/  /writeups/sql-injection-union-attack-retrieving-multi-values/  301
+/2025/07/12/idor/  /writeups/idor/  301
+/2025/05/27/191/  /writeups/advanced-screening/  301
+/2024/11/13/bola/  /writeups/bola/  301
+/2024/10/29/insecure-file-upload/  /writeups/insecure-file-upload/  301
+/2024/10/27/ssrf/  /writeups/ssrf/  301
+/2024/10/24/xxs/  /writeups/xxs-stored/  301
+/writeups  /blog  301
