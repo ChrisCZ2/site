@@ -1,44 +1,25 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import HomeFootSections from '../components/HomeFootSections.astro';
-import HomeTerminal from '../components/HomeTerminal.astro';
-import { site } from '../config/site';
-const avatar =
-  'https://chriscz.com/wp-content/uploads/2024/10/cropped-wolverine.jpg';
+import StoryHero from '../components/StoryHero.astro';
 ---
 
 <BaseLayout fullWidth>
-  <section class="hero-gr3p hero-gr3p--no-rule">
-    <div class="hero-inner">
-      <h1 class="hero-title">
-        APPLICATION<br /><span class="dim">SECURITY.</span>
-      </h1>
-      <p class="hero-byline">
-        BY <span class="highlight">{site.handle}</span>
-      </p>
-
-      <p class="hero-lead">
-        {site.tagline} Web app, API, cloud, and CTF research — plus fitness and life notes off
-        the keyboard.
-      </p>
-
-      <div class="hero-actions">
-        <a href="/blog" class="btn-primary">Read writeups →</a>
-        <a href="/fitness" class="btn-ghost btn-ghost--plain">Fitness / life →</a>
-      </div>
-    </div>
-  </section>
-
-  <HomeTerminal />
-
-  <section class="who-section">
-    <h2 class="section-heading">
-      WHO IS <span class="muted-italic">{site.handle.toUpperCase()}?</span>
-    </h2>
-    <hr class="section-rule" />
-    <p class="who-text">{site.about.split('\n\n')[0]}</p>
-    <img class="who-img" src={avatar} alt={`${site.handle} — appsec researcher`} loading="lazy" />
-  </section>
-
-  <HomeFootSections />
+  <StoryHero />
 </BaseLayout>
+
+<style is:global>
+  /* Homepage is a single full-screen hero — hide global header/footer here only */
+  .site-header,
+  .site-footer {
+    display: none;
+  }
+
+  body {
+    background: #0a0a0a;
+  }
+
+  .shell {
+    display: flex;
+    flex-direction: column;
+  }
+</style>

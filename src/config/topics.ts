@@ -21,7 +21,7 @@ export const topics: Topic[] = [
   {
     slug: 'blog',
     href: '/blog',
-    title: 'Blog',
+    title: 'Work',
     description: 'All writeups — main place about my research as a hacker.',
   },
   {

@@ -1,0 +1,146 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import { site } from '../config/site';
+---
+
+<PageLayout
+  title="Contact"
+  description="Have a finding, a question, or want to work together? Send a message."
+  crumb="$ ./contact.sh"
+>
+  <form class="contact-form" id="contactForm" data-to={site.email}>
+    <div class="contact-row">
+      <div class="contact-field">
+        <label for="cf-name">Name</label>
+        <input id="cf-name" name="name" type="text" autocomplete="name" required />
+      </div>
+      <div class="contact-field">
+        <label for="cf-email">Email</label>
+        <input id="cf-email" name="email" type="email" autocomplete="email" required />
+      </div>
+    </div>
+
+    <div class="contact-field">
+      <label for="cf-subject">Subject</label>
+      <input id="cf-subject" name="subject" type="text" />
+    </div>
+
+    <div class="contact-field">
+      <label for="cf-message">Message</label>
+      <textarea id="cf-message" name="message" rows="7" required></textarea>
+    </div>
+
+    <div class="contact-actions">
+      <button class="btn-primary" type="submit">Send message →</button>
+      <p class="contact-note">
+        This opens your email app with the message pre-filled to
+        <a href={`mailto:${site.email}`}>{site.email}</a>.
+      </p>
+    </div>
+  </form>
+
+  <script is:inline>
+    (() => {
+      const form = document.getElementById('contactForm');
+      if (!form) return;
+      const to = form.getAttribute('data-to');
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const data = new FormData(form);
+        const name = (data.get('name') || '').toString().trim();
+        const email = (data.get('email') || '').toString().trim();
+        const subject = (data.get('subject') || '').toString().trim() || `Message from ${name}`;
+        const message = (data.get('message') || '').toString().trim();
+
+        const body = `${message}\n\n— ${name} (${email})`;
+        const href = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        window.location.href = href;
+      });
+    })();
+  </script>
+</PageLayout>
+
+<style>
+  .contact-form {
+    max-width: 40rem;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .contact-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  @media (min-width: 560px) {
+    .contact-row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .contact-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .contact-field label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+
+  .contact-field input,
+  .contact-field textarea {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    padding: 13px 15px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+
+  .contact-field textarea {
+    resize: vertical;
+    min-height: 140px;
+    line-height: 1.6;
+  }
+
+  .contact-field input::placeholder,
+  .contact-field textarea::placeholder {
+    color: var(--dim);
+  }
+
+  .contact-field input:focus,
+  .contact-field textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+
+  .contact-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+    margin-top: 4px;
+  }
+
+  .contact-note {
+    margin: 0;
+    font-size: 13px;
+    color: var(--dim);
+  }
+
+  .contact-note a {
+    color: var(--accent);
+  }
+</style>

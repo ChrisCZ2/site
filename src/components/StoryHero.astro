@@ -1,0 +1,349 @@
+---
+import { site } from '../config/site';
+import { media } from '../config/media';
+import Logo from './Logo.astro';
+
+/**
+ * Single-screen hero — "Black. Minimal Portfolio." layout, personalised.
+ * Dark cycling gif background, minimal white type, magenta accents.
+ */
+const gifs = [
+  media.gifs.hacker1,
+  media.gifs.hacker2,
+  '/media/gifs/coding.gif',
+  media.gifs.hacker3,
+];
+
+const nav = [
+  { label: 'About.', href: '/about' },
+  { label: 'Works.', href: '/blog' },
+  { label: 'Contact.', href: '/contact' },
+];
+
+const socials = [
+  { label: 'GitHub', short: 'gh', href: site.links.github },
+  { label: 'X', short: 'x', href: site.links.twitter },
+  { label: 'HackerOne', short: 'h1', href: site.links.hackerone },
+  { label: 'LinkedIn', short: 'in', href: site.links.linkedin },
+];
+---
+
+<section class="bw-hero" aria-label="chriscz — hacker until the end">
+  {gifs.map((src) => <link rel="preload" as="image" href={src} />)}
+
+  <div class="bw-hero__bg" data-bw-bg style={`background-image:url('${gifs[0]}')`}></div>
+  <div class="bw-hero__bg" data-bw-bg style="opacity:0"></div>
+  <div class="bw-hero__overlay"></div>
+
+  <span class="bw-hero__watermark" aria-hidden="true">{site.handle.toUpperCase()}</span>
+
+  <header class="bw-hero__top">
+    <a class="bw-hero__brand" href="/">
+      <Logo size={30} />
+      <span class="bw-hero__brand-dash"></span>
+      <span class="bw-hero__brand-name">{site.handle}.</span>
+    </a>
+
+    <nav class="bw-hero__nav" aria-label="Main">
+      <span class="bw-hero__menu-label">Menu</span>
+      {nav.map((l) => <a href={l.href}>{l.label}</a>)}
+    </nav>
+  </header>
+
+  <div class="bw-hero__center">
+    <h1 class="bw-hero__title">{site.handle}.</h1>
+    <p class="bw-hero__subtitle">
+      <span class="bw-hero__sub-dash"></span>Hacker until the end.
+    </p>
+  </div>
+
+  <div class="bw-hero__meta">UI / APPSEC · 2025.</div>
+
+  <div class="bw-hero__socials">
+    {socials.map((s) => (
+      <a href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label}>{s.short}</a>
+    ))}
+  </div>
+
+  <a class="bw-hero__scroll" href="/blog" aria-label="See writeups">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+      <path d="M12 4v16M6 14l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+    <span>Writeups</span>
+  </a>
+
+  <script type="application/json" data-bw-gifs set:html={JSON.stringify(gifs)} />
+
+  <script is:inline>
+    (() => {
+      const root = document.currentScript.closest('.bw-hero');
+      if (!root) return;
+      const layers = root.querySelectorAll('[data-bw-bg]');
+      const gifs = JSON.parse(root.querySelector('[data-bw-gifs]').textContent);
+      if (layers.length < 2 || !Array.isArray(gifs) || gifs.length === 0) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      let active = 0;
+      let gi = 0;
+      setInterval(() => {
+        gi = (gi + 1) % gifs.length;
+        const next = layers[1 - active];
+        next.style.backgroundImage = `url('${gifs[gi]}')`;
+        next.style.opacity = '1';
+        layers[active].style.opacity = '0';
+        active = 1 - active;
+      }, 4200);
+    })();
+  </script>
+</section>
+
+<style>
+  .bw-hero {
+    position: relative;
+    min-height: 100svh;
+    overflow: hidden;
+    background: #0a0a0a;
+  }
+
+  .bw-hero__bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: grayscale(1) brightness(0.4) contrast(1.1);
+    transition: opacity 1.2s ease;
+  }
+
+  .bw-hero__overlay {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgba(8, 8, 8, 0.7) 0%, rgba(8, 8, 8, 0.45) 40%, rgba(8, 8, 8, 0.8) 100%),
+      radial-gradient(120% 90% at 50% 30%, transparent 35%, rgba(0, 0, 0, 0.65) 100%);
+  }
+
+  .bw-hero__watermark {
+    position: absolute;
+    left: 50%;
+    bottom: -2%;
+    transform: translateX(-50%);
+    z-index: 1;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(6rem, 24vw, 22rem);
+    letter-spacing: -0.04em;
+    line-height: 1;
+    color: rgba(255, 255, 255, 0.045);
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* —— Top bar —— */
+  .bw-hero__top {
+    position: absolute;
+    z-index: 3;
+    top: 42px;
+    left: 0;
+    right: 0;
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 0 48px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .bw-hero__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    color: #fff;
+  }
+
+  .bw-hero__brand-dash {
+    width: 22px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.55);
+  }
+
+  .bw-hero__brand-name {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 16px;
+    letter-spacing: 0.01em;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .bw-hero__nav {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    text-align: right;
+  }
+
+  .bw-hero__menu-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+
+  .bw-hero__nav a {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.1rem, 2vw, 1.4rem);
+    color: #fff;
+    line-height: 1.25;
+    transition: color 0.15s;
+  }
+
+  .bw-hero__nav a:hover {
+    color: var(--accent);
+  }
+
+  /* —— Center headline —— */
+  .bw-hero__center {
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0;
+    right: 0;
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 0 48px;
+  }
+
+  .bw-hero__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(3.5rem, 11vw, 9rem);
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    color: #fff;
+  }
+
+  .bw-hero__subtitle {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin: 14px 0 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.25rem, 3.4vw, 2.25rem);
+    letter-spacing: -0.02em;
+    color: #fff;
+  }
+
+  .bw-hero__sub-dash {
+    width: 34px;
+    height: 3px;
+    background: var(--accent);
+    flex: 0 0 auto;
+  }
+
+  /* —— Footer row —— */
+  .bw-hero__meta {
+    position: absolute;
+    z-index: 3;
+    left: 48px;
+    bottom: 40px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .bw-hero__socials {
+    position: absolute;
+    z-index: 3;
+    right: 48px;
+    bottom: 40px;
+    display: flex;
+    gap: 18px;
+  }
+
+  .bw-hero__socials a {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.65);
+    transition: color 0.15s;
+  }
+
+  .bw-hero__socials a:hover {
+    color: var(--accent);
+  }
+
+  .bw-hero__scroll {
+    position: absolute;
+    z-index: 3;
+    left: 50%;
+    bottom: 34px;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: #fff;
+  }
+
+  .bw-hero__scroll svg {
+    animation: bw-bob 1.8s ease-in-out infinite;
+  }
+
+  .bw-hero__scroll span {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+  }
+
+  .bw-hero__scroll:hover {
+    color: var(--accent);
+  }
+
+  @keyframes bw-bob {
+    0%, 100% { transform: translateY(-3px); }
+    50% { transform: translateY(3px); }
+  }
+
+  @media (max-width: 720px) {
+    .bw-hero__top,
+    .bw-hero__center {
+      padding: 0 24px;
+    }
+    .bw-hero__top {
+      top: 24px;
+    }
+    .bw-hero__meta,
+    .bw-hero__scroll {
+      display: none;
+    }
+    .bw-hero__socials {
+      right: 24px;
+      bottom: 24px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bw-hero__bg {
+      transition: none;
+    }
+    .bw-hero__scroll svg {
+      animation: none;
+    }
+  }
+</style>
