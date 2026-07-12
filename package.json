@@ -10,8 +10,6 @@
     "build": "astro build",
     "preview": "npm run build && wrangler dev",
     "astro": "astro",
-    "gif:terminal": "python3 scripts/generate-terminal-gif.py",
-    "images:blog": "python3 scripts/fetch-blog-images.py",
     "generate-types": "wrangler types",
     "deploy": "npm run build && wrangler deploy"
   },

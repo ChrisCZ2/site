@@ -1,37 +1,12 @@
 ---
 import { site } from '../config/site';
-import { footerColumns } from '../config/navigation';
-import Logo from './Logo.astro';
 const year = new Date().getFullYear();
 ---
 
-<footer class="site-footer">
-  <div class="site-footer-inner">
-    <div>
-      <a href="/" class="brand" style="margin-bottom: 12px">
-        <Logo size={34} class="brand-logo" />
-        <span class="brand-name">{site.handle}</span>
-      </a>
-      <p class="brand-blurb">{site.description}</p>
+<footer id="footer" class="site-footer">
+  <div class="inner">
+    <div class="copyright">
+      <p>&copy; {year} {site.name}. Responsible disclosure only.</p>
     </div>
-
-    {
-      footerColumns.map((col) => (
-        <div>
-          <h5>{col.title}</h5>
-          {col.links.map((link) => (
-            <a
-              href={link.href}
-              target={link.external ? '_blank' : undefined}
-              rel={link.external ? 'noopener noreferrer' : undefined}
-            >
-              {link.label}
-            </a>
-          ))}
-        </div>
-      ))
-    }
   </div>
-
-  <p class="footer-copy">© {year} {site.handle} — responsible disclosure only</p>
 </footer>

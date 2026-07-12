@@ -14,6 +14,7 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
+const readTime = Math.max(1, Math.round((entry.body ?? '').trim().split(/\s+/).filter(Boolean).length / 200));
 ---
 
 <WriteupLayout
@@ -23,6 +24,7 @@ const { Content } = await render(entry);
   severity={entry.data.severity}
   program={entry.data.program}
   tags={entry.data.tags}
+  readTime={readTime}
 >
   <Content />
 </WriteupLayout>

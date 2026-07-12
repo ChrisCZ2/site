@@ -8,15 +8,23 @@ interface Props {
   crumb?: string;
 }
 
-const { title, description, crumb } = Astro.props;
+const { title, description } = Astro.props;
 const pageTitle = `${title} — ${site.name}`;
 ---
 
-<BaseLayout title={pageTitle} description={description}>
-  <header class="page-head">
-    {crumb && <div class="crumbs">{crumb}</div>}
-    <h1>{title}</h1>
-    {description && <p>{description}</p>}
+<BaseLayout title={pageTitle} description={description} layout="page">
+  <header class="intro">
+    <div class="inner">
+      <div class="intro-text">
+        <h1 id="page-title" class="intro-title">{title}</h1>
+        {description && <p class="intro-subtitle">{description}</p>}
+      </div>
+    </div>
   </header>
-  <slot />
+
+  <main id="main" class="page-content" aria-label="Content">
+    <div class="inner">
+      <slot />
+    </div>
+  </main>
 </BaseLayout>

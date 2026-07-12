@@ -3,30 +3,249 @@ import '../styles/global.css';
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import Sidebar from '../components/Sidebar.astro';
+import Icon from '../components/Icon.astro';
 
 interface Props {
   title?: string;
   description?: string;
-  fullWidth?: boolean;
+  layout?: string;
 }
 
-const { title, description, fullWidth = false } = Astro.props;
+const { title, description, layout = 'page' } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
     <BaseHead title={title} description={description} />
+    <script is:inline>
+      (() => {
+        try {
+          let t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
   </head>
-  <body>
-    <div class="app">
-      <Header />
-      <main class="shell">
-        <div class={fullWidth ? '' : 'page-wrap'}>
+  <body class={`layout--${layout}`}>
+    <nav class="skip-links" aria-label="Skip links">
+      <ul>
+        <li><a href="#primary-nav">Skip to primary navigation</a></li>
+        <li><a href="#main">Skip to content</a></li>
+        <li><a href="#footer">Skip to footer</a></li>
+      </ul>
+    </nav>
+
+    <div class="sidebar-toggle-wrapper">
+      <button class="theme-toggle" type="button" aria-label="Toggle light/dark mode" title="Toggle light/dark mode">
+        <Icon name="moon" class="icon-moon" />
+        <Icon name="sun" class="icon-sun" />
+      </button>
+
+      <button class="search-toggle" type="button" aria-label="Toggle search">
+        <Icon name="search" />
+      </button>
+
+      <button class="toggle navicon-button larr" type="button" aria-label="Toggle menu">
+        <span class="toggle-inner">
+          <span class="navicon"></span>
+        </span>
+      </button>
+    </div>
+
+    <Sidebar />
+
+    <div class="canvas">
+      <div class="wrapper">
+        <Header />
+        <div class="initial-content">
           <slot />
         </div>
-      </main>
-      <Footer />
+
+        <div class="search-content">
+          <div class="inner">
+            <label class="visually-hidden" for="search">Site Search</label>
+            <input
+              type="text"
+              id="search"
+              class="search-input"
+              aria-describedby="results-count"
+              placeholder="Enter your search term..."
+            />
+            <div id="results" class="results"></div>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <Footer />
+
+    <script is:inline>
+      (() => {
+        const wrapper = document.querySelector('.wrapper');
+        const menu = document.querySelector('.sidebar');
+        const toggle = document.querySelector('.toggle');
+        const items = document.querySelectorAll('#sidebar li');
+        if (!wrapper || !menu || !toggle) return;
+
+        function animateItems() {
+          items.forEach((item, i) => {
+            item.style.transitionDelay = i * 75 + 'ms';
+            item.classList.toggle('is--moved');
+          });
+        }
+
+        function toggleMenu() {
+          if (!menu.classList.contains('is--visible')) {
+            menu.classList.add('is--visible');
+            toggle.classList.add('open');
+            wrapper.classList.add('is--pushed');
+          } else {
+            menu.classList.remove('is--visible');
+            toggle.classList.remove('open');
+            wrapper.classList.remove('is--pushed');
+          }
+        }
+
+        toggle.addEventListener('click', () => {
+          toggleMenu();
+          animateItems();
+        });
+        menu.addEventListener('click', () => {
+          toggleMenu();
+          animateItems();
+        });
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && menu.classList.contains('is--visible')) {
+            toggleMenu();
+            animateItems();
+          }
+        });
+
+        // Theme toggle
+        const themeToggle = document.querySelector('.theme-toggle');
+        if (themeToggle) {
+          themeToggle.addEventListener('click', () => {
+            const cur =
+              document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+            const next = cur === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            try {
+              localStorage.setItem('theme', next);
+            } catch (e) {}
+          });
+        }
+
+        // Search toggle
+        const searchToggle = document.querySelector('.search-toggle');
+        const searchContent = document.querySelector('.search-content');
+        const initialContent = document.querySelector('.initial-content');
+        if (searchToggle && searchContent && initialContent) {
+          searchToggle.addEventListener('click', () => {
+            searchContent.classList.toggle('is--visible');
+            initialContent.classList.toggle('is--hidden');
+            if (searchContent.classList.contains('is--visible')) {
+              setTimeout(() => {
+                const input = document.querySelector('.search-content input');
+                if (input) input.focus();
+              }, 100);
+            }
+          });
+        }
+      })();
+    </script>
+
+    <script is:inline src="/assets/javascripts/lunr/lunr.min.js"></script>
+    <script is:inline>
+      (() => {
+        const input = document.getElementById('search');
+        const resultsDiv = document.getElementById('results');
+        if (!input || !resultsDiv || typeof window.lunr === 'undefined') return;
+
+        let idx = null;
+        let store = [];
+        let loaded = false;
+
+        async function ensureIndex() {
+          if (loaded) return;
+          loaded = true;
+          try {
+            const res = await fetch('/search.json');
+            store = await res.json();
+            idx = window.lunr(function () {
+              this.field('title', { boost: 10 });
+              this.field('excerpt');
+              this.field('categories');
+              this.field('tags');
+              this.ref('id');
+              this.pipeline.remove(window.lunr.trimmer);
+              store.forEach((doc, i) => {
+                this.add({
+                  title: doc.title,
+                  excerpt: doc.excerpt,
+                  categories: (doc.categories || []).join(' '),
+                  tags: (doc.tags || []).join(' '),
+                  id: i,
+                });
+              });
+            });
+          } catch (e) {
+            loaded = false;
+          }
+        }
+
+        function render(results) {
+          resultsDiv.innerHTML = '';
+          const count = document.createElement('p');
+          count.id = 'results-count';
+          count.className = 'results-found';
+          count.textContent = results.length + ' Result(s) found';
+          resultsDiv.appendChild(count);
+
+          results.forEach((r) => {
+            const item = store[r.ref];
+            if (!item) return;
+            const article = document.createElement('article');
+            article.className = 'entry';
+            const excerpt = (item.excerpt || '').split(' ').slice(0, 20).join(' ');
+            article.innerHTML =
+              '<h3 class="entry-title"><a href="' + item.url + '">' + item.title + '</a></h3>' +
+              '<div class="entry-excerpt"><p>' + excerpt + '...</p></div>';
+            resultsDiv.appendChild(article);
+          });
+        }
+
+        input.addEventListener('focus', ensureIndex);
+        input.addEventListener('keyup', async function () {
+          await ensureIndex();
+          if (!idx) return;
+          const query = this.value.toLowerCase();
+          if (!query.trim()) {
+            resultsDiv.innerHTML = '';
+            return;
+          }
+          const results = idx.query(function (q) {
+            query.split(window.lunr.tokenizer.separator).forEach(function (term) {
+              q.term(term, { boost: 100 });
+              if (query.lastIndexOf(' ') != query.length - 1) {
+                q.term(term, {
+                  usePipeline: false,
+                  wildcard: window.lunr.Query.wildcard.TRAILING,
+                  boost: 10,
+                });
+              }
+              if (term != '') {
+                q.term(term, { usePipeline: false, editDistance: 1, boost: 1 });
+              }
+            });
+          });
+          render(results);
+        });
+      })();
+    </script>
   </body>
 </html>

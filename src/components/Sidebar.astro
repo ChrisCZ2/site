@@ -1,0 +1,41 @@
+---
+import { site } from '../config/site';
+import { mainNav } from '../config/navigation';
+import Icon from './Icon.astro';
+
+const contacts = [
+  { label: 'Email', href: `mailto:${site.email}`, icon: 'email' as const },
+  { label: 'GitHub', href: site.links.github, icon: 'github' as const },
+  { label: 'Twitter', href: site.links.twitter, icon: 'twitter' as const },
+  { label: 'HackerOne', href: site.links.hackerone, icon: 'hackerone' as const },
+  { label: 'LinkedIn', href: site.links.linkedin, icon: 'linkedin' as const },
+];
+---
+
+<div id="sidebar" class="sidebar">
+  <div class="inner">
+    <nav id="primary-nav" class="site-nav" aria-label="Main navigation">
+      <ul class="menu">
+        {mainNav.map(({ href, label }) => (
+          <li class="menu-item">
+            <a href={href}>{label}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <ul class="contact-list">
+      {contacts.map((c) => (
+        <li>
+          <a
+            href={c.href}
+            target={c.href.startsWith('http') ? '_blank' : undefined}
+            rel={c.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+          >
+            <Icon name={c.icon} /><span class="label">{c.label}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</div>

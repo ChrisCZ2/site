@@ -5,6 +5,8 @@ export const site = {
   url: 'https://chriscz.com',
   handle: 'chriscz',
   tagline: 'Main place about my writeups as a hacker',
+  heroVideo: '/media/hero.mp4',
+  logo: '/logo.png',
   email: 'security@chriscz.com',
   pgpFingerprint: 'XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX',
   stats: {
