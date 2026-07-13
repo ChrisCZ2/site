@@ -4,8 +4,8 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import mdx from '@astrojs/mdx';
 
-import cloudflare from '@astrojs/cloudflare';
-
+// This site is fully static (no on-demand rendering), so it builds to plain
+// HTML in `dist/` and is served by Cloudflare as static assets — no SSR adapter.
 // https://astro.build/config
 export default defineConfig({
   site: process.env.PUBLIC_SITE_URL ?? 'https://recon.example',
@@ -15,5 +15,4 @@ export default defineConfig({
   },
 
   integrations: [mdx()],
-  adapter: cloudflare(),
 });
