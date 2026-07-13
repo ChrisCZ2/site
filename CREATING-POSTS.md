@@ -220,12 +220,18 @@ npm run build
 This validates every post's frontmatter. If something is wrong, the build fails with a message pointing at the file/field.
 
 **Publish**
-The repo is set up for Vercel. Commit and push your new `.mdx` file (and any images) to the connected branch; Vercel rebuilds and deploys automatically.
+The site deploys to **Cloudflare Workers**. Commit and push your new `.mdx` file (and any images); if the repo is connected to Cloudflare it rebuilds and deploys automatically:
 
 ```bash
 git add src/content/ public/media/
 git commit -m "Add writeup: SSRF in the image proxy"
 git push
+```
+
+To deploy manually from your machine instead:
+
+```bash
+npm run deploy   # runs the build, then `wrangler deploy`
 ```
 
 ---
@@ -298,3 +304,19 @@ Write your post here.
 - Hide a post: `draft: true`
 - Images: put in `public/media/...`, reference as `/media/...`
 - Preview: `npm run dev` · Validate: `npm run build` · Publish: commit + push
+
+---
+
+## 14. Changing the homepage (hero video + intro text)
+
+The homepage isn't a post — its copy lives in **`src/config/site.ts`** and its hero media in **`public/media/`**.
+
+- **Intro text / tagline / site name:** edit `name`, `tagline`, and `description` in `src/config/site.ts`.
+- **Hero video:** the homepage plays `public/media/hero.mp4`. To swap it, replace that file (keep the same name), or point `heroVideo` in `src/config/site.ts` at a different path under `public/`. Keep it small and web-friendly (a short, muted, looping MP4, a few MB max).
+- **Nav links:** edit `mainNav` in `src/config/navigation.ts`. Use paths that already exist (e.g. `/blog`, `/fitness`).
+
+---
+
+## 15. Search (nothing to do)
+
+Search is built automatically from your posts. Every writeup and fitness post is indexed by its `title`, `description`, tags, and category — just publish a post and it becomes searchable. There is no manual index to update.

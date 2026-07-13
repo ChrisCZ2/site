@@ -1,6 +1,7 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import SeverityBadge from '../components/SeverityBadge.astro';
+import Icon from '../components/Icon.astro';
 import { site } from '../config/site';
 
 interface Props {
@@ -10,9 +11,10 @@ interface Props {
   severity: 'critical' | 'high' | 'medium' | 'low' | 'info';
   program?: string;
   tags: string[];
+  readTime?: number;
 }
 
-const { title, description, pubDate, severity, program, tags } = Astro.props;
+const { title, description, pubDate, severity, program, tags, readTime } = Astro.props;
 const formatted = pubDate.toLocaleDateString('en-US', {
   year: 'numeric',
   month: 'long',
@@ -21,30 +23,44 @@ const formatted = pubDate.toLocaleDateString('en-US', {
 const pageTitle = `${title} — ${site.name}`;
 ---
 
-<BaseLayout title={pageTitle} description={description}>
-  <header class="page-head">
-    <div class="crumbs">root@{site.handle}:~# cat writeups/{title.toLowerCase().replace(/\s+/g, '-')}.md</div>
-    <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 12px">
-      <SeverityBadge severity={severity} />
-      {program && <span style="font-family: var(--font-mono); font-size: 13px; color: var(--steel)">{program}</span>}
-    </div>
-    <h1>{title}</h1>
-    <p>{description}</p>
-    <p style="font-family: var(--font-mono); font-size: 12px; color: var(--steel); margin-top: 12px">
-      <time datetime={pubDate.toISOString()}>{formatted}</time>
-      {
-        tags.length > 0 && (
-          <>
-            {' · '}
+<BaseLayout title={pageTitle} description={description} layout="post">
+  <header class="intro">
+    <div class="inner">
+      <div class="intro-text">
+        <h1 id="page-title" class="intro-title">{title}</h1>
+        {description && <p class="intro-subtitle">{description}</p>}
+
+        <p class="entry-meta">
+          <span class="byline-item"><SeverityBadge severity={severity} /></span>
+          {program && <span class="byline-item">{program}</span>}
+          <span class="byline-item">
+            <Icon name="calendar" />
+            <time datetime={pubDate.toISOString()}>{formatted}</time>
+          </span>
+          {readTime && (
+            <span class="byline-item">
+              <Icon name="stopwatch" />
+              {readTime} min read
+            </span>
+          )}
+        </p>
+
+        {tags.length > 0 && (
+          <p class="entry-tags">
             {tags.map((tag) => (
-              <span style="color: var(--highlight)">#{tag} </span>
+              <span class="skill-chip">#{tag}</span>
             ))}
-          </>
-        )
-      }
-    </p>
+          </p>
+        )}
+      </div>
+    </div>
   </header>
-  <article class="card prose-writeup">
-    <slot />
-  </article>
+
+  <main id="main" class="page-content" aria-label="Content">
+    <div class="inner">
+      <article class="entry-content prose-writeup">
+        <slot />
+      </article>
+    </div>
+  </main>
 </BaseLayout>

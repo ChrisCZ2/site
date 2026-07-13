@@ -1,25 +1,113 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import StoryHero from '../components/StoryHero.astro';
+import Icon from '../components/Icon.astro';
+import { site } from '../config/site';
+import { getCollection } from 'astro:content';
+
+const writeups = (await getCollection('writeups'))
+  .filter((w) => !w.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+function readingTime(body: string | undefined) {
+  const words = (body ?? '').trim().split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.round(words / 200));
+}
+
+const posts = writeups.map((entry) => ({
+  title: entry.data.title,
+  description: entry.data.description,
+  href: `/writeups/${entry.id}`,
+  coverImage: entry.data.coverImage,
+  date: entry.data.pubDate.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  }),
+  iso: entry.data.pubDate.toISOString(),
+  minutes: readingTime(entry.body),
+}));
 ---
 
-<BaseLayout fullWidth>
-  <StoryHero />
+<BaseLayout title={site.title} description={site.description} layout="home">
+  <header class="intro">
+    {site.heroVideo && (
+      <div class="intro-image">
+        <video src={site.heroVideo} autoplay loop muted playsinline aria-hidden="true"></video>
+      </div>
+    )}
+
+    <div class="inner">
+      <div class="intro-text">
+        <h1 id="page-title" class="intro-title">{site.name}</h1>
+        <p class="intro-subtitle">{site.tagline}</p>
+
+        <div class="intro-more">
+          <p>
+            I'm {site.name}, a web application penetration tester. This is where I publish my
+            writeups, CTF solves, and security research — with detailed steps and remediation.
+          </p>
+        </div>
+
+        <ul class="intro-actions">
+          <li>
+            <a href="/blog" class="btn">
+              <span class="icon"><Icon name="arrow-right" /></span>Read writeups
+            </a>
+          </li>
+          <li>
+            <a href="/about" class="btn">
+              <span class="icon"><Icon name="github" /></span>About me
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="page-content" aria-label="Content">
+    <div class="index inner">
+      <div>
+        <header class="section-title">
+          <h2>Posts</h2>
+        </header>
+
+        <div class="entries-list">
+          {posts.map((post) => (
+            <article class="entry">
+              {post.coverImage && (
+                <a href={post.href} class="entry-image-link" aria-hidden="true" tabindex="-1">
+                  <img class="entry-image" src={post.coverImage} alt="" loading="lazy" />
+                </a>
+              )}
+              <header class="entry-header">
+                <h3 class="entry-title">
+                  <a href={post.href} rel="bookmark">{post.title}</a>
+                </h3>
+              </header>
+              <footer class="entry-meta">
+                <ul>
+                  <li>
+                    <Icon name="calendar" />
+                    <time datetime={post.iso}>{post.date}</time>
+                  </li>
+                  <li>
+                    <Icon name="stopwatch" />
+                    {post.minutes} min read
+                  </li>
+                </ul>
+              </footer>
+              <div class="entry-excerpt">
+                <p>{post.description}</p>
+                <p>
+                  <a href={post.href} class="more-link">
+                    Read More <Icon name="arrow-right" />
+                  </a>
+                </p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </div>
+  </main>
 </BaseLayout>
-
-<style is:global>
-  /* Homepage is a single full-screen hero — hide global header/footer here only */
-  .site-header,
-  .site-footer {
-    display: none;
-  }
-
-  body {
-    background: #0a0a0a;
-  }
-
-  .shell {
-    display: flex;
-    flex-direction: column;
-  }
-</style>
