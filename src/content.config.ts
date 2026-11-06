@@ -25,16 +25,4 @@ const writeups = defineCollection({
   }),
 });
 
-const fitness = defineCollection({
-  loader: glob({ base: './src/content/fitness', pattern: '**/*.{md,mdx}' }),
-  schema: z.object({
-    title: z.string(),
-    description: z.string(),
-    pubDate: z.coerce.date(),
-    tags: z.array(z.string()).default([]),
-    coverImage: z.string().optional(),
-    draft: z.boolean().default(false),
-  }),
-});
-
-export const collections = { writeups, fitness };
+export const collections = { writeups };

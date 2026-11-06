@@ -5,12 +5,11 @@ No coding required — posts are just Markdown files with a small settings block
 
 ---
 
-## 1. The two kinds of posts
+## 1. Post files
 
 | Type | Folder | Becomes URL | Shows up on |
 |------|--------|-------------|-------------|
 | **Writeup** (security/research) | `src/content/writeups/` | `/writeups/<filename>` | `/blog` (Work) + the matching category page |
-| **Fitness / Life** | `src/content/fitness/` | `/fitness/<filename>` | `/fitness` |
 
 The **file name = the URL slug**. Example: `src/content/writeups/ssrf-image-proxy.mdx` → `https://yoursite/writeups/ssrf-image-proxy`.
 
@@ -44,28 +43,7 @@ Write the writeup body here in normal Markdown.
 
 ---
 
-## 3. Quick start (fitness / life)
-
-1. Create a file: `src/content/fitness/my-post.mdx`
-2. Paste this and edit it:
-
-```mdx
----
-title: 'Weekend reset'
-description: 'One-line summary for the list.'
-pubDate: 2026-07-01
-tags: ['recovery']
-draft: false
----
-
-Body in Markdown...
-```
-
-3. Save → live at `/fitness/my-post`.
-
----
-
-## 4. The frontmatter block (the `---` settings)
+## 3. The frontmatter block (the `---` settings)
 
 Everything between the top `---` and the second `---` is **frontmatter** — the post's settings. It must be valid YAML.
 
@@ -77,25 +55,14 @@ Everything between the top `---` and the second `---` is **frontmatter** — the
 | `description` | ✅ | text | — | One line. Shown on cards + used for the page meta description. |
 | `pubDate` | ✅ | date `YYYY-MM-DD` | — | Controls sort order (newest first). |
 | `severity` | ✅ | `critical` \| `high` \| `medium` \| `low` \| `info` | — | Renders the colored severity badge. |
-| `category` | ❌ | `web-app-security` \| `api-secuirty` \| `cloud-security` \| `ctfs` \| `blog` | `web-app-security` | Decides which category page lists it (see §5). |
+| `category` | ❌ | `web-app-security` \| `api-secuirty` \| `cloud-security` \| `ctfs` \| `blog` | `web-app-security` | Decides which category page lists it (see §4). |
 | `coverImage` | ❌ | path text | — | Thumbnail on list cards. Path starts at `/media/...`. |
 | `youtubeVideo` | ❌ | YouTube URL or video ID | — | Player beneath the post details and above the article. |
 | `program` | ❌ | text | — | e.g. `PortSwigger Labs`, a bug bounty program. Shown as a small label. |
 | `tags` | ❌ | list of text | `[]` | Shown as `#tag` chips. |
-| `draft` | ❌ | `true` \| `false` | `false` | `true` hides the post everywhere (see §9). |
+| `draft` | ❌ | `true` \| `false` | `false` | `true` hides the post everywhere (see §8). |
 
 > ⚠️ Note: the category value `api-secuirty` is intentionally misspelled to match the existing route `/api-secuirty`. Type it exactly like that.
-
-### Fitness fields
-
-| Field | Required | Type | Default | Notes |
-|-------|----------|------|---------|-------|
-| `title` | ✅ | text | — | |
-| `description` | ✅ | text | — | |
-| `pubDate` | ✅ | date `YYYY-MM-DD` | — | Sort order. |
-| `tags` | ❌ | list of text | `[]` | |
-| `coverImage` | ❌ | path text | — | |
-| `draft` | ❌ | `true`/`false` | `false` | |
 
 ### Tag formats (both work)
 
@@ -112,7 +79,7 @@ tags:
 
 ---
 
-## 5. Where a writeup appears (categories)
+## 4. Where a writeup appears (categories)
 
 A writeup **always** appears on **`/blog`** (the "Work" page), which lists everything.
 
@@ -130,7 +97,7 @@ If you omit `category`, it defaults to `web-app-security`.
 
 ---
 
-## 6. Writing the body (Markdown / MDX)
+## 5. Writing the body (Markdown / MDX)
 
 Below the second `---`, write normal Markdown. Supported:
 
@@ -164,7 +131,7 @@ Headings, code blocks, tables, links, and quotes are all styled automatically by
 
 ---
 
-## 7. Adding images
+## 6. Adding images
 
 1. Put image files anywhere under the `public/media/` folder. A good convention already used here is by date:
    `public/media/blog/chriscz/2026/07/screenshot.png`
@@ -187,7 +154,7 @@ Tips:
 
 ---
 
-## 8. Adding a YouTube video
+## 7. Adding a YouTube video
 
 Add `youtubeVideo` to a writeup's frontmatter. You can paste a normal YouTube URL, a share/Shorts URL, or the 11-character video ID:
 
@@ -199,10 +166,10 @@ The responsive video player appears beneath the title and post details, before t
 
 ---
 
-## 9. Drafts (work on a post before publishing)
+## 8. Drafts (work on a post before publishing)
 
 Set `draft: true` in frontmatter. The post will:
-- **not** appear in any list (`/blog`, category pages, `/fitness`)
+- **not** appear in any list (`/blog` or category pages)
 - **not** generate a public page in the production build
 
 When ready to publish, change it to `draft: false`.
@@ -211,7 +178,7 @@ When ready to publish, change it to `draft: false`.
 
 ---
 
-## 10. Ordering & dates
+## 9. Ordering & dates
 
 - Posts are sorted by `pubDate`, **newest first**, in every list.
 - Format is `YYYY-MM-DD` (e.g. `2026-07-01`). Quotes optional.
@@ -219,7 +186,7 @@ When ready to publish, change it to `draft: false`.
 
 ---
 
-## 11. Preview, build, and publish
+## 10. Preview, build, and publish
 
 **Preview locally**
 ```bash
@@ -250,9 +217,7 @@ npm run deploy   # runs the build, then `wrangler deploy`
 
 ---
 
-## 12. Copy-paste templates
-
-### Full writeup template
+## 11. Copy-paste template
 
 ```mdx
 ---
@@ -277,46 +242,27 @@ draft: true               # flip to false to publish
 ## Remediation
 ```
 
-### Full fitness template
-
-```mdx
----
-title: ''
-description: ''
-pubDate: 2026-01-01
-tags: []
-coverImage: ''            # optional — remove if unused
-draft: true
----
-
-Write your post here.
-```
-
----
-
-## 13. Troubleshooting
+## 12. Troubleshooting
 
 | Problem | Likely cause / fix |
 |--------|--------------------|
 | Build fails mentioning a field | A required field (`title`, `description`, `pubDate`, `severity`) is missing or misnamed. |
 | Build fails on `severity` / `category` | Value isn't in the allowed list. Check spelling — note `api-secuirty`. |
 | Date error | `pubDate` must be `YYYY-MM-DD` (not `07/01/2026`). |
-| Post doesn't show up | `draft` is `true`, or the file isn't in `src/content/writeups/` or `src/content/fitness/`. |
+| Post doesn't show up | `draft` is `true`, or the file isn't in `src/content/writeups/`. |
 | Title with a colon breaks YAML | Wrap the value in quotes: `title: 'XSS: stored to account takeover'`. |
 | Image doesn't load | Path must start with `/media/...` (drop the `public/` prefix) and the file must exist under `public/`. |
 | Build fails on `youtubeVideo` | Use a YouTube watch/share/Shorts URL or its 11-character video ID. |
-| Wrong category page | Fix the `category` value (see §5). |
+| Wrong category page | Fix the `category` value (see §4). |
 | Apostrophe in YAML text | Use double quotes: `description: "I'm testing..."`. |
 
 ---
 
-## 14. Cheat sheet
+## 13. Cheat sheet
 
 - New writeup → file in `src/content/writeups/<slug>.mdx`
-- New fitness post → file in `src/content/fitness/<slug>.mdx`
 - File name = URL slug
 - Required (writeup): `title`, `description`, `pubDate`, `severity`
-- Required (fitness): `title`, `description`, `pubDate`
 - Hide a post: `draft: true`
 - Images: put in `public/media/...`, reference as `/media/...`
 - YouTube: add `youtubeVideo` to writeup frontmatter
@@ -324,16 +270,16 @@ Write your post here.
 
 ---
 
-## 15. Changing the homepage (hero video + intro text)
+## 14. Changing the homepage (hero video + intro text)
 
 The homepage isn't a post — its copy lives in **`src/config/site.ts`** and its hero media in **`public/media/`**.
 
 - **Intro text / tagline / site name:** edit `name`, `tagline`, and `description` in `src/config/site.ts`.
 - **Hero video:** the homepage plays `public/media/hero.mp4`. To swap it, replace that file (keep the same name), or point `heroVideo` in `src/config/site.ts` at a different path under `public/`. Keep it small and web-friendly (a short, muted, looping MP4, a few MB max).
-- **Nav links:** edit `mainNav` in `src/config/navigation.ts`. Use paths that already exist (e.g. `/blog`, `/fitness`).
+- **Nav links:** edit `mainNav` in `src/config/navigation.ts`. Use paths that already exist (e.g. `/blog`, `/about`).
 
 ---
 
-## 16. Search (nothing to do)
+## 15. Search (nothing to do)
 
-Search is built automatically from your posts. Every writeup and fitness post is indexed by its `title`, `description`, tags, and category — just publish a post and it becomes searchable. There is no manual index to update.
+Search is built automatically from your writeups. Every post is indexed by its `title`, `description`, tags, and category — just publish a post and it becomes searchable. There is no manual index to update.

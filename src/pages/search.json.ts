@@ -21,10 +21,7 @@ function toExcerpt(body: string | undefined, words = 50): string {
 }
 
 export const GET: APIRoute = async () => {
-  const [writeups, fitness] = await Promise.all([
-    getCollection('writeups'),
-    getCollection('fitness'),
-  ]);
+  const writeups = await getCollection('writeups');
 
   const store: Array<{
     title: string;
@@ -43,18 +40,6 @@ export const GET: APIRoute = async () => {
       categories: entry.data.category ? [entry.data.category] : [],
       tags: entry.data.tags ?? [],
       url: `/writeups/${entry.id}`,
-    });
-  }
-
-  for (const entry of fitness.filter((f) => !f.data.draft)) {
-    store.push({
-      title: entry.data.title,
-      excerpt: entry.data.description
-        ? `${entry.data.description} ${toExcerpt(entry.body)}`
-        : toExcerpt(entry.body),
-      categories: ['fitness'],
-      tags: entry.data.tags ?? [],
-      url: `/fitness/${entry.id}`,
     });
   }
 
