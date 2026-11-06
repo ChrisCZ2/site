@@ -2,6 +2,7 @@
 import BaseLayout from './BaseLayout.astro';
 import SeverityBadge from '../components/SeverityBadge.astro';
 import Icon from '../components/Icon.astro';
+import YouTubePlayer from '../components/YouTubePlayer.astro';
 import { site } from '../config/site';
 
 interface Props {
@@ -10,11 +11,12 @@ interface Props {
   pubDate: Date;
   severity: 'critical' | 'high' | 'medium' | 'low' | 'info';
   program?: string;
+  youtubeVideo?: string;
   tags: string[];
   readTime?: number;
 }
 
-const { title, description, pubDate, severity, program, tags, readTime } = Astro.props;
+const { title, description, pubDate, severity, program, youtubeVideo, tags, readTime } = Astro.props;
 const formatted = pubDate.toLocaleDateString('en-US', {
   year: 'numeric',
   month: 'long',
@@ -58,6 +60,7 @@ const pageTitle = `${title} — ${site.name}`;
 
   <main id="main" class="page-content" aria-label="Content">
     <div class="inner">
+      {youtubeVideo && <YouTubePlayer video={youtubeVideo} title={title} />}
       <article class="entry-content prose-writeup">
         <slot />
       </article>

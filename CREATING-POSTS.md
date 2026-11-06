@@ -30,6 +30,7 @@ description: 'One-line summary that appears on list cards and in search/social p
 pubDate: 2026-07-01
 severity: high
 category: 'web-app-security'
+# youtubeVideo: 'https://youtu.be/aqz-KE-bpKQ' # optional
 tags: ['ssrf', 'web']
 draft: false
 ---
@@ -78,9 +79,10 @@ Everything between the top `---` and the second `---` is **frontmatter** — the
 | `severity` | ✅ | `critical` \| `high` \| `medium` \| `low` \| `info` | — | Renders the colored severity badge. |
 | `category` | ❌ | `web-app-security` \| `api-secuirty` \| `cloud-security` \| `ctfs` \| `blog` | `web-app-security` | Decides which category page lists it (see §5). |
 | `coverImage` | ❌ | path text | — | Thumbnail on list cards. Path starts at `/media/...`. |
+| `youtubeVideo` | ❌ | YouTube URL or video ID | — | Player beneath the post details and above the article. |
 | `program` | ❌ | text | — | e.g. `PortSwigger Labs`, a bug bounty program. Shown as a small label. |
 | `tags` | ❌ | list of text | `[]` | Shown as `#tag` chips. |
-| `draft` | ❌ | `true` \| `false` | `false` | `true` hides the post everywhere (see §8). |
+| `draft` | ❌ | `true` \| `false` | `false` | `true` hides the post everywhere (see §9). |
 
 > ⚠️ Note: the category value `api-secuirty` is intentionally misspelled to match the existing route `/api-secuirty`. Type it exactly like that.
 
@@ -185,7 +187,19 @@ Tips:
 
 ---
 
-## 8. Drafts (work on a post before publishing)
+## 8. Adding a YouTube video
+
+Add `youtubeVideo` to a writeup's frontmatter. You can paste a normal YouTube URL, a share/Shorts URL, or the 11-character video ID:
+
+```yaml
+youtubeVideo: 'https://www.youtube.com/watch?v=aqz-KE-bpKQ'
+```
+
+The responsive video player appears beneath the title and post details, before the article body. Remove the field from posts that do not need a video.
+
+---
+
+## 9. Drafts (work on a post before publishing)
 
 Set `draft: true` in frontmatter. The post will:
 - **not** appear in any list (`/blog`, category pages, `/fitness`)
@@ -197,7 +211,7 @@ When ready to publish, change it to `draft: false`.
 
 ---
 
-## 9. Ordering & dates
+## 10. Ordering & dates
 
 - Posts are sorted by `pubDate`, **newest first**, in every list.
 - Format is `YYYY-MM-DD` (e.g. `2026-07-01`). Quotes optional.
@@ -205,7 +219,7 @@ When ready to publish, change it to `draft: false`.
 
 ---
 
-## 10. Preview, build, and publish
+## 11. Preview, build, and publish
 
 **Preview locally**
 ```bash
@@ -236,7 +250,7 @@ npm run deploy   # runs the build, then `wrangler deploy`
 
 ---
 
-## 11. Copy-paste templates
+## 12. Copy-paste templates
 
 ### Full writeup template
 
@@ -249,6 +263,7 @@ severity: medium          # critical | high | medium | low | info
 category: 'web-app-security'  # web-app-security | api-secuirty | cloud-security | ctfs | blog
 program: ''               # optional — remove if unused
 coverImage: ''            # optional — remove if unused, e.g. /media/blog/chriscz/2026/01/cover.png
+# youtubeVideo: 'https://youtu.be/aqz-KE-bpKQ' # optional — URL or video ID
 tags: []
 draft: true               # flip to false to publish
 ---
@@ -279,7 +294,7 @@ Write your post here.
 
 ---
 
-## 12. Troubleshooting
+## 13. Troubleshooting
 
 | Problem | Likely cause / fix |
 |--------|--------------------|
@@ -289,12 +304,13 @@ Write your post here.
 | Post doesn't show up | `draft` is `true`, or the file isn't in `src/content/writeups/` or `src/content/fitness/`. |
 | Title with a colon breaks YAML | Wrap the value in quotes: `title: 'XSS: stored to account takeover'`. |
 | Image doesn't load | Path must start with `/media/...` (drop the `public/` prefix) and the file must exist under `public/`. |
+| Build fails on `youtubeVideo` | Use a YouTube watch/share/Shorts URL or its 11-character video ID. |
 | Wrong category page | Fix the `category` value (see §5). |
 | Apostrophe in YAML text | Use double quotes: `description: "I'm testing..."`. |
 
 ---
 
-## 13. Cheat sheet
+## 14. Cheat sheet
 
 - New writeup → file in `src/content/writeups/<slug>.mdx`
 - New fitness post → file in `src/content/fitness/<slug>.mdx`
@@ -303,11 +319,12 @@ Write your post here.
 - Required (fitness): `title`, `description`, `pubDate`
 - Hide a post: `draft: true`
 - Images: put in `public/media/...`, reference as `/media/...`
+- YouTube: add `youtubeVideo` to writeup frontmatter
 - Preview: `npm run dev` · Validate: `npm run build` · Publish: commit + push
 
 ---
 
-## 14. Changing the homepage (hero video + intro text)
+## 15. Changing the homepage (hero video + intro text)
 
 The homepage isn't a post — its copy lives in **`src/config/site.ts`** and its hero media in **`public/media/`**.
 
@@ -317,6 +334,6 @@ The homepage isn't a post — its copy lives in **`src/config/site.ts`** and its
 
 ---
 
-## 15. Search (nothing to do)
+## 16. Search (nothing to do)
 
 Search is built automatically from your posts. Every writeup and fitness post is indexed by its `title`, `description`, tags, and category — just publish a post and it becomes searchable. There is no manual index to update.
